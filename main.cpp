@@ -1,16 +1,22 @@
 #include <iostream>
 #include <vector>
-#include "Supermarket.h"
-#include "Checkout.h"
+#include "SupermarketCheckout.h"
+#include "Stock.h"
+#include "Order.h"
 
 int main()
 {
     std::cout << "Hello World" << std::endl;
 
-    Supermarket supermarket;
-    std::vector<std::string> discount_items;
-    for (int i = 0; i < 3; i++) {
-        discount_items.push_back(std::string("Item " + std::to_string(i)));
+    Stock stock;
+    stock.AddItem("Book", 10);
+    stock.AddItem("Apple", 1);
+
+    Order order;
+    for (int i = 0; i < 5; i++) {
+        order.AddItem("Book");
+        order.AddItem("Apple");
     }
-    Checkout checkout(supermarket, discount_items);
+    SupermarketCheckout checkout(stock);
+    std::cout << checkout.Buy(order) << std::endl;
 }

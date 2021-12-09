@@ -3,8 +3,9 @@
 
 #include <unordered_map>
 #include <string>
+#include "Order.h"
 
-class Supermarket {
+class Stock {
 public:
     void AddItem(std::string name, int price);
 
