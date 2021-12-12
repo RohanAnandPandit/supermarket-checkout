@@ -46,7 +46,7 @@ std::string SupermarketCheckout::Buy(Order &order) {
 
 int SupermarketCheckout::BuyThreePayForTwo(std::vector<std::string> items, 
     std::unordered_map<std::string, int> &freq, std::string &bill) {
-    bill.append(">Buy Three Pay for Two<\n");
+    bill.append("> Buy Three Pay for Two\n");
     int total_discount = 0, price, n, free;
 
     for (auto item : items) {
@@ -65,7 +65,7 @@ int SupermarketCheckout::BuyThreePayForTwo(std::vector<std::string> items,
 }
 
 int SupermarketCheckout::BuyThreeCheapestIsFree(std::unordered_map<std::string, int> &freq, std::string &bill) {
-    bill.append(">Buy Three from (");
+    bill.append("> Buy Three from (");
     bool first = true;
     for (auto item : discount_items_) {
         if (!first) {
@@ -74,7 +74,7 @@ int SupermarketCheckout::BuyThreeCheapestIsFree(std::unordered_map<std::string, 
         first = false;
         bill.append(item);
     }
-    bill.append(")\n");
+    bill.append(") and cheapest is free\n");
 
     int total_discount = 0, min_price = -1, curr_price;
     std::string cheapest_item;

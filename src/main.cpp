@@ -23,14 +23,17 @@ int main()
     stock_input.close();
 
     Order order;
-    std::ifstream order_input("items.txt");
+    std::ifstream order_input("purchase_items.txt");
     while (getline(order_input, item)) {
         order.AddItem(item);
     }
     order_input.close();
 
-    std::vector<std::string> discount_items{"Apple", "Book", "c"};
-
+    std::vector<std::string> discount_items;
+    std::ifstream discount_items_input("discount_items.txt");
+    while (getline(discount_items_input, item)) {
+        discount_items.push_back(item);
+    }
     SupermarketCheckout checkout(stock, discount_items);
     std::cout << checkout.Buy(order) << std::endl;
 }
