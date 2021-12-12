@@ -34,7 +34,7 @@ int SupermarketCheckout::BuyThreePayForTwo(std::vector<std::string> items,
         n = freq[item];
         free = n / 3;
         freq[item] -= free;
-        
+
         if (free > 0) {
             price = stock_.GetPrice(item);
             total_discount += free * price;
@@ -52,6 +52,7 @@ int SupermarketCheckout::BuyThreeCheapestIsFree(
     std::string &bill) {
 
     bill.append("> Buy Three from (");
+    
     bool first = true;
     for (auto item : discount_items_) {
         if (!first) {
@@ -60,6 +61,7 @@ int SupermarketCheckout::BuyThreeCheapestIsFree(
         first = false;
         bill.append(item);
     }
+
     bill.append(") and cheapest is free\n");
 
     int total_discount = 0, min_price = -1, curr_price;
@@ -77,7 +79,7 @@ int SupermarketCheckout::BuyThreeCheapestIsFree(
             if (set_items == 3) {
                 total_discount += min_price;
                 bill.append("- £" + std::to_string(min_price));
-                bill.append("(" + cheapest_item + ")");
+                bill.append(" (" + cheapest_item + ")");
                 set_items = 0;
                 min_price = -1;
             }
