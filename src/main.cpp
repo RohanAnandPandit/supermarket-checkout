@@ -34,6 +34,8 @@ int main()
     while (getline(discount_items_input, item)) {
         discount_items.push_back(item);
     }
+
     SupermarketCheckout checkout(stock, discount_items);
-    std::cout << checkout.Buy(order) << std::endl;
+    std::string bill = checkout.Buy(order);
+    std::cout << bill << std::endl;
 }
