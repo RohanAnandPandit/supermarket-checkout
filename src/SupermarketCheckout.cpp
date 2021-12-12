@@ -28,16 +28,18 @@ std::string SupermarketCheckout::Buy(Order &order) {
 int SupermarketCheckout::BuyThreePayForTwo(std::vector<std::string> items, 
     std::unordered_map<std::string, int> &freq, std::string &bill) {
     bill.append("> Buy Three Pay for Two\n");
+
     int total_discount = 0, price, n, free;
 
     for (auto item : items) {
         n = freq[item];
         free = n / 3;
-        freq[item] -= free;
-
+        
         if (free > 0) {
+            freq[item] -= free;
             price = stock_.GetPrice(item);
             total_discount += free * price;
+
             bill.append("- " + item + " x " + std::to_string(free));
             bill.append(" = £" + std::to_string(free * price));
             bill.append("\n");
@@ -52,7 +54,7 @@ int SupermarketCheckout::BuyThreeCheapestIsFree(
     std::string &bill) {
 
     bill.append("> Buy Three from (");
-    
+
     bool first = true;
     for (auto item : discount_items_) {
         if (!first) {
@@ -71,15 +73,18 @@ int SupermarketCheckout::BuyThreeCheapestIsFree(
     for (auto item : discount_items_) {
         for (int i = 0; i < freq[item]; i++) {
             curr_price = stock_.GetPrice(item);
+
             if (min_price == -1 || curr_price < min_price) {
                 cheapest_item = item;
                 min_price = curr_price;
             } 
+
             set_items += 1;
             if (set_items == 3) {
                 total_discount += min_price;
                 bill.append("- £" + std::to_string(min_price));
                 bill.append(" (" + cheapest_item + ")");
+
                 set_items = 0;
                 min_price = -1;
             }
@@ -99,6 +104,7 @@ void SupermarketCheckout::AddSubtotal(Order &order, int &total,
         freq = order.GetFrequency(item);
         price = stock_.GetPrice(item) * freq;
         total += price;
+        
         bill.append("+ " + item + ": ");
         bill.append("£" + std::to_string(stock_.GetPrice(item)));
         bill.append(" x " + std::to_string(freq));
