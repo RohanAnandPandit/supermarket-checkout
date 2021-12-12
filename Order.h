@@ -15,6 +15,8 @@ public:
 
     int GetFrequency(std::string item);
 
+    std::unordered_map<std::string, int> AllFrequencies();
+
 private:
     std::unordered_map<std::string, int> item_freq_;
 

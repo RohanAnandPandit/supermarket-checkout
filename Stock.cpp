@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <string>
 
-void Stock::AddItem(std::string name, int price) {
+void Stock::AddUnitPrice(std::string name, int price) {
     prices_[name] = price;
 }
 

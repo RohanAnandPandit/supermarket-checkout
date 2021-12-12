@@ -7,7 +7,7 @@
 
 class Stock {
 public:
-    void AddItem(std::string name, int price);
+    void AddUnitPrice(std::string name, int price);
 
     int GetPrice(std::string);
 

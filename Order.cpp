@@ -22,5 +22,9 @@ void Order::AddItem(std::string item) {
     if (!ContainsItem(item)) {
         item_freq_[item] = 0;
     }
-    item_freq_[item] = item_freq_[item] + 1;
+    item_freq_[item]++;
+}
+
+std::unordered_map<std::string, int> Order::AllFrequencies() {
+    return item_freq_;
 }
