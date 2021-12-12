@@ -19,6 +19,10 @@ private:
         std::unordered_map<std::string, int> &freq, std::string &bill);
         
     int BuyThreeCheapestIsFree(std::unordered_map<std::string, int> &freq, std::string &bill);
+
+    void ApplyDiscounts(Order &order, int &total, std::string &bill);
+
+    void AddSubtotal(Order &order, int &total, std::string &bill);
 };
 
 #endif

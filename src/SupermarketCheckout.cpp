@@ -3,44 +3,25 @@
 #include <unordered_map>
 #include "Order.h"
 
-SupermarketCheckout::SupermarketCheckout(Stock &stock, std::vector<std::string> &discount_items) 
+SupermarketCheckout::SupermarketCheckout(Stock &stock, 
+    std::vector<std::string> &discount_items) 
     : stock_(stock), discount_items_(discount_items) {
 }
 
 std::string SupermarketCheckout::Buy(Order &order) {
-    std::string bill = "*******BILL*********\n";
-    int total = 0, price, freq;
-    bill.append("+ Item: Unit Price x Quantity\n");
+    std::string bill = "***********BILL************\n";
+    int total = 0;
 
-    for (auto item : order.GetItems()) {
-        freq = order.GetFrequency(item);
-        price = stock_.GetPrice(item) * freq;
-        total += price;
-        bill.append("+ " + item + ": ");
-        bill.append("£" + std::to_string(stock_.GetPrice(item)) + " x " + std::to_string(freq));
-        bill.append(" = £" + std::to_string(price));
-        bill.append("\n");
-    }
+    AddSubtotal(order, total, bill);
 
-    bill.append("\n");
-    bill.append("Subtotal: £" + std::to_string(total));
-    bill.append("\n\n");
-    bill.append("--------------------\n");
-    bill.append(":) Discounts :)\n");
+    bill.append("\n-------------------\n");
+    
+    ApplyDiscounts(order, total, bill);
 
-    std::unordered_map<std::string, int> payment_freq = order.AllFrequencies();
-    int total_discount = 0;
-    total_discount += BuyThreePayForTwo(order.GetItems(), payment_freq, bill);
-    bill.append("\n");
-
-    total_discount += BuyThreeCheapestIsFree(payment_freq, bill);
-    bill.append("\n");
-    bill.append("--------------------\n");
-    bill.append("Total discounts: -£" + std::to_string( total_discount));
-    bill.append("\n");
-    total -= total_discount;
     bill.append("Grand total: £" + std::to_string(total));
+
     bill.append("\n*******************\n");
+
     return bill;
 }
 
@@ -53,10 +34,12 @@ int SupermarketCheckout::BuyThreePayForTwo(std::vector<std::string> items,
         n = freq[item];
         free = n / 3;
         freq[item] -= free;
+        
         if (free > 0) {
             price = stock_.GetPrice(item);
             total_discount += free * price;
-            bill.append("- " + item + " x " + std::to_string(free) + " = £" + std::to_string(free * price));
+            bill.append("- " + item + " x " + std::to_string(free));
+            bill.append(" = £" + std::to_string(free * price));
             bill.append("\n");
         }
     }
@@ -64,7 +47,10 @@ int SupermarketCheckout::BuyThreePayForTwo(std::vector<std::string> items,
     return total_discount;
 }
 
-int SupermarketCheckout::BuyThreeCheapestIsFree(std::unordered_map<std::string, int> &freq, std::string &bill) {
+int SupermarketCheckout::BuyThreeCheapestIsFree(
+    std::unordered_map<std::string, int> &freq,
+    std::string &bill) {
+
     bill.append("> Buy Three from (");
     bool first = true;
     for (auto item : discount_items_) {
@@ -90,7 +76,8 @@ int SupermarketCheckout::BuyThreeCheapestIsFree(std::unordered_map<std::string, 
             set_items += 1;
             if (set_items == 3) {
                 total_discount += min_price;
-                bill.append("- £" + std::to_string(min_price) + " for " + cheapest_item);
+                bill.append("- £" + std::to_string(min_price));
+                bill.append("(" + cheapest_item + ")");
                 set_items = 0;
                 min_price = -1;
             }
@@ -98,4 +85,45 @@ int SupermarketCheckout::BuyThreeCheapestIsFree(std::unordered_map<std::string, 
     }
 
     return total_discount;
+}
+
+void SupermarketCheckout::AddSubtotal(Order &order, int &total, 
+    std::string &bill) {
+        
+    bill.append("+ Item: Unit Price x Quantity\n");
+    int freq, price;
+
+    for (auto item : order.GetItems()) {
+        freq = order.GetFrequency(item);
+        price = stock_.GetPrice(item) * freq;
+        total += price;
+        bill.append("+ " + item + ": ");
+        bill.append("£" + std::to_string(stock_.GetPrice(item)));
+        bill.append(" x " + std::to_string(freq));
+        bill.append(" = £" + std::to_string(price));
+        bill.append("\n");
+    }
+
+    bill.append("\n");
+    bill.append("Subtotal: £" + std::to_string(total));
+}
+
+void SupermarketCheckout::ApplyDiscounts(Order &order, int &total, 
+    std::string &bill) {
+
+    bill.append(":) Discounts :)\n");
+
+    std::unordered_map<std::string, int> payment_freq = order.AllFrequencies();
+
+    int total_discount = 0;
+    total_discount += BuyThreePayForTwo(order.GetItems(), payment_freq, bill);
+    bill.append("\n");
+
+    total_discount += BuyThreeCheapestIsFree(payment_freq, bill);
+
+    bill.append("\n--------------------\n");
+    bill.append("Total discounts: -£" + std::to_string( total_discount));
+    bill.append("\n");
+
+    total -= total_discount;
 }
